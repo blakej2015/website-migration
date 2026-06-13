@@ -1,0 +1,99 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Blake Jones - Colorist, Consultant, Instructor and Writer with 28+ years of experience" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header>
+      <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+        <a href="/" style="font-size: 1.5rem; font-weight: bold; color: white; text-decoration: none;">Blake Jones</a>
+        <nav style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+          <a href="/">Home</a>
+          <a href="/blake-s-biography">Bio</a>
+          <a href="/colorist">Colorist</a>
+          <a href="/training-services">Training</a>
+          <a href="/consultant">Consultant</a>
+          <a href="/writer">Writer</a>
+          <a href="/gallery">Gallery</a>
+          <a href="/youtube-channel">YouTube</a>
+          <a href="/tips-and-tricks-videos">Tips</a>
+          <a href="/webshop">Webshop</a>
+          <a href="/links">Links</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <p>&copy; {new Date().getFullYear()} Blake Jones - All rights reserved</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --accent: 136, 58, 234;
+    --accent-light: 224, 204, 250;
+    --accent-dark: 49, 10, 101;
+    --accent-gradient: linear-gradient(
+      45deg,
+      rgb(var(--accent)),
+      rgb(var(--accent-light)) 30%,
+      white 60%
+    );
+  }
+  html {
+    font-family: system-ui, sans-serif;
+    background: #13151a;
+    background-size: 224px;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    color: white;
+  }
+  header {
+    padding: 1rem;
+    background: rgba(var(--accent-dark), 0.5);
+  }
+  nav {
+    display: flex;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  nav a:hover {
+    color: rgb(var(--accent-light));
+  }
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  footer {
+    text-align: center;
+    padding: 2rem;
+    background: rgba(var(--accent-dark), 0.3);
+    margin-top: 3rem;
+  }
+</style>

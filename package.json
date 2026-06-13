@@ -1,0 +1,21 @@
+{
+  "name": "website-migration",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "migrate": "node scripts/wordpress-export.js"
+  },
+  "dependencies": {
+    "astro": "^4.0.0",
+    "@astrojs/netlify": "^4.0.0",
+    "decap-cms-app": "^3.0.0"
+  },
+  "devDependencies": {
+    "xml2js": "^0.6.2"
+  }
+}

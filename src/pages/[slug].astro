@@ -1,0 +1,210 @@
+---
+import { readdirSync, readFileSync } from 'fs';
+import { join } from 'path';
+import Layout from '../layouts/Layout.astro';
+
+export function getStaticPaths() {
+  const pagesDir = join(process.cwd(), 'src', 'content', 'pages');
+  const files = readdirSync(pagesDir).filter(f => f.endsWith('.md') && f !== 'home.md');
+  
+  return files.map(file => ({
+    params: { slug: file.replace('.md', '') },
+    props: { filename: file },
+  }));
+}
+
+const { slug } = Astro.params;
+const { filename } = Astro.props;
+
+// Read and process the markdown file
+const filePath = join(process.cwd(), 'src', 'content', 'pages', filename);
+const fileContent = readFileSync(filePath, 'utf-8');
+
+// Extract frontmatter and body
+const frontmatterMatch = fileContent.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+let bodyHtml = '';
+let title = '';
+let description = '';
+let image = '';
+let isFullHtml = false;
+
+if (frontmatterMatch) {
+  const frontmatter = frontmatterMatch[1];
+  const body = frontmatterMatch[2];
+  
+  // Parse frontmatter
+  const titleMatch = frontmatter.match(/title:\s*"([^"]+)"/);
+  const descMatch = frontmatter.match(/description:\s*"([^"]+)"/);
+  const imgMatch = frontmatter.match(/image:\s*"([^"]+)"/);
+  
+  if (titleMatch) title = titleMatch[1];
+  if (descMatch) description = descMatch[1];
+  if (imgMatch) image = imgMatch[1];
+  
+  // Check if this is a full HTML document
+  isFullHtml = body.includes('<!doctype html>') || body.includes('<html');
+  
+  if (isFullHtml) {
+    // For full HTML pages, use the title from the HTML if we can find it
+    const htmlTitleMatch = body.match(/<title>([^<]+)<\/title>/i);
+    if (htmlTitleMatch && !title) {
+      title = htmlTitleMatch[1];
+    }
+    // For full HTML pages, extract body and preserve styles
+    const styleMatch = body.match(/<style[^>]*>([\s\S]*?)<\/style>/gi);
+    const bodyMatch = body.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+    
+    if (bodyMatch) {
+      let pageContent = bodyMatch[1]
+        // Fix links that point to old WordPress site
+        .replace(/href="https:\/\/blake-jones\.com\/([^"]+)"/g, 'href="/$1"')
+        .replace(/href="https:\/\/www\.blake-jones\.com\/([^"]+)"/g, 'href="/$1"')
+        // Remove any inline nav that conflicts with our layout
+        .replace(/<nav[^>]*>[\s\S]*?<\/nav>/gi, '')
+        // Remove inline headers/footers if they exist
+        .replace(/<header[^>]*>[\s\S]*?<\/header>/gi, '')
+        .replace(/<footer[^>]*>[\s\S]*?<\/footer>/gi, '');
+      
+      // Also convert any markdown inside the HTML (for mixed content)
+      pageContent = pageContent
+        // Convert markdown images
+        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width:100%;height:auto;border-radius:8px;margin:1rem 0;display:block;" />')
+        // Convert markdown links
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:var(--accent);text-decoration:underline;">$1</a>')
+        // Convert markdown headings (### etc)
+        .replace(/^### (.*$)/gim, '<h3 style="margin:1.5rem 0 1rem;color:var(--accent);">$1</h3>')
+        .replace(/^## (.*$)/gim, '<h2 style="margin:1.5rem 0 1rem;color:var(--accent);">$1</h2>')
+        // Convert markdown lists
+        .replace(/^\s*[-*] (.*$)/gim, '<li style="margin:0.5rem 0;">$1</li>')
+        // Wrap consecutive list items in ul
+        .replace(/(<li[^>]*>.*<\/li>\n?)+/gi, '<ul style="margin:1rem 0;padding-left:1.5rem;">$&</ul>');
+      
+      // Include styles if found
+      if (styleMatch) {
+        bodyHtml = '<style>' + styleMatch.join('\n').replace(/<style[^>]*>/gi, '').replace(/<\/style>/gi, '') + '</style>' + pageContent;
+      } else {
+        bodyHtml = pageContent;
+      }
+    } else {
+      bodyHtml = body;
+    }
+  } else {
+    // Convert markdown to HTML
+    bodyHtml = body
+      // Convert markdown images to HTML
+      .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" style="max-width:100%;height:auto;border-radius:8px;margin:1.5rem 0;display:block;" />')
+      // Convert markdown links to HTML
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:rgb(var(--accent-light));text-decoration:underline;">$1</a>')
+      // Convert bold text
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      // Convert italic text
+      .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+      // Convert YouTube URLs to iframes
+      .replace(/https:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/g, '<iframe width="560" height="315" src="https://www.youtube.com/embed/$1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="max-width:100%;border-radius:8px;margin:1.5rem 0;display:block;"></iframe>')
+      // Clean up HTML tags
+      .replace(/ class="[^"]*"/g, '')
+      .replace(/<figcaption>\s*<br\s*\/?>\s*<\/figcaption>/gi, '')
+      .replace(/<br\s*\/?>/gi, '');
+  }
+}
+
+// Format title nicely if not set
+const formatTitle = (slug: string) => {
+  return slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+    .replace(/S /g, "'s ");
+};
+
+const displayTitle = title || formatTitle(slug);
+---
+
+<Layout title={`${displayTitle} | Blake Jones`} description={description}>
+  {isFullHtml ? (
+    <!-- For full HTML pages, just render the content with styles -->
+    <div set:html={bodyHtml}></div>
+  ) : (
+    <!-- For markdown pages, use our standard layout -->
+    <article style="max-width: 900px; margin: 0 auto; line-height: 1.8; font-size: 1.1rem;">
+      <h1 style="font-size: 2.5rem; margin-bottom: 2rem; color: rgb(var(--accent-light));">{displayTitle}</h1>
+      
+      {image && (
+        <img 
+          src={image} 
+          alt={displayTitle}
+          style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin-bottom: 2rem;" 
+        />
+      )}
+      
+      <div class="page-content" style="margin-top: 2rem;" set:html={bodyHtml}>
+      </div>
+    </article>
+  )}
+</Layout>
+
+<style>
+  .page-content :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    display: block;
+  }
+  .page-content :global(iframe) {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    display: block;
+  }
+  .page-content :global(h2) {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: rgb(var(--accent-light));
+    font-size: 1.8rem;
+  }
+  .page-content :global(h1) {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+  }
+  .page-content :global(h3) {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: rgb(var(--accent-light));
+  }
+  .page-content :global(p) {
+    margin-bottom: 1.2rem;
+  }
+  .page-content :global(hr) {
+    border: none;
+    border-top: 1px solid rgba(var(--accent-light), 0.3);
+    margin: 2rem 0;
+  }
+  .page-content :global(a) {
+    color: rgb(var(--accent-light));
+    text-decoration: underline;
+  }
+  .page-content :global(ul), .page-content :global(ol) {
+    margin-bottom: 1.5rem;
+    padding-left: 2rem;
+  }
+  .page-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+  .page-content :global(figure) {
+    margin: 1.5rem 0;
+  }
+  .page-content :global(figcaption) {
+    font-size: 0.9rem;
+    color: #888;
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+  .page-content :global(blockquote) {
+    border-left: 4px solid rgb(var(--accent));
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+  }
+</style>

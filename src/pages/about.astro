@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+
+const page = await getEntry('pages', 'about');
+const { Content } = page ? await page.render() : { Content: () => null };
+---
+
+<Layout title="About">
+  <h1>About</h1>
+  
+  {page ? (
+    <div style="line-height: 1.8;">
+      <Content />
+    </div>
+  ) : (
+    <div>
+      <p>Edit this page through the CMS at <code>/admin</code> or by editing <code>src/content/pages/about.md</code></p>
+      
+      <h2>Your Name</h2>
+      <p>Tell visitors about yourself or your business here.</p>
+      
+      <h3>Services</h3>
+      <ul>
+        <li>Service 1</li>
+        <li>Service 2</li>
+        <li>Service 3</li>
+      </ul>
+    </div>
+  )}
+</Layout>
