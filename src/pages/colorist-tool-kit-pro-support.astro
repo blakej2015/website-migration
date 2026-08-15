@@ -1,0 +1,398 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Colorist Tool Kit Pro Support';
+const description = 'Download Colorist Tool Kit Pro for macOS, view installation instructions, and get help with setup.';
+---
+
+<Layout title={title} description={description}>
+  <article class="support-page">
+    <header class="support-header">
+      <h1>Colorist Tool Kit Pro</h1>
+      <p class="subtitle">macOS installation, setup, and support</p>
+    </header>
+
+    <section class="download-cards" aria-labelledby="downloads-heading">
+      <h2 id="downloads-heading" class="sr-only">Downloads</h2>
+
+      <a href="/downloads/colorist-tool-kit-pro.dmg" class="download-card primary" download>
+        <span class="download-icon" aria-hidden="true">⬇</span>
+        <div>
+          <h3>Download for macOS</h3>
+          <p>Colorist Tool Kit Pro.dmg</p>
+        </div>
+      </a>
+
+      <a href="/downloads/colorist-tool-kit-pro-install.pdf" class="download-card" download>
+        <span class="download-icon" aria-hidden="true">📄</span>
+        <div>
+          <h3>Download Instructions (PDF)</h3>
+          <p>Installation & Setup Guide</p>
+        </div>
+      </a>
+    </section>
+
+    <section class="instructions" aria-labelledby="instructions-heading">
+      <h2 id="instructions-heading">Installation Instructions</h2>
+
+      <p>
+        This guide covers installing the macOS app and connecting the iOS companion so you can use
+        ShortcutPad and Monitor Calibration.
+      </p>
+
+      <h3>What you need</h3>
+      <ul>
+        <li>A Mac running macOS 26.4 or later.</li>
+        <li>An iPhone or iPad running iOS 26.0 or later.</li>
+        <li>Both devices on the same Wi-Fi network, or an iPhone-to-Mac USB cable.</li>
+      </ul>
+
+      <h3>Install the Mac app</h3>
+      <h4>From the .dmg (recommended)</h4>
+      <ol>
+        <li>Download <code>Colorist Tool Kit Pro.dmg</code>.</li>
+        <li>Double-click the <code>.dmg</code> to mount it.</li>
+        <li>Drag <code>Colorist Tool Kit Pro.app</code> onto the <code>Applications</code> alias in the disk image.</li>
+        <li>Eject the disk image.</li>
+        <li>
+          Open the app from <code>Applications</code> the first time. macOS may show a Gatekeeper warning
+          because it was downloaded from the web — if so, right-click the app icon and choose <strong>Open</strong>,
+          then click <strong>Open</strong> again.
+        </li>
+      </ol>
+
+      <h4>From the .zip (alternate)</h4>
+      <ol>
+        <li>Download <code>Colorist Tool Kit Pro.zip</code>.</li>
+        <li>Unzip the file.</li>
+        <li>Drag <code>Colorist Tool Kit Pro.app</code> into your <code>Applications</code> folder.</li>
+        <li>Open it from <code>Applications</code> the first time as described above.</li>
+      </ol>
+
+      <blockquote>
+        The <code>.app</code> is notarized and stapled, so after the first manual open it should open
+        normally on any Mac.
+      </blockquote>
+
+      <h3>Grant Accessibility permission</h3>
+      <p>
+        The Mac app uses the native <strong>ShortcutPad Server</strong> to send keyboard shortcuts to
+        DaVinci Resolve and OBS. macOS requires Accessibility permission for this.
+      </p>
+      <ol>
+        <li>Open <strong>System Settings</strong> → <strong>Privacy &amp; Security</strong> → <strong>Accessibility</strong>.</li>
+        <li>If <code>Colorist Tool Kit Pro</code> is not in the list, click <strong>+</strong> and add it from <code>Applications</code>.</li>
+        <li>Turn the switch on for <code>Colorist Tool Kit Pro</code>.</li>
+      </ol>
+
+      <h3>Start the ShortcutPad Server</h3>
+      <p>
+        The ShortcutPad Server is built into the <strong>macOS Colorist Tool Kit Pro app</strong>. It is not a
+        separate download and is not available in the iOS/iPadOS version.
+      </p>
+      <ol>
+        <li>Open <strong>Colorist Tool Kit Pro</strong> on your Mac.</li>
+        <li>
+          In the left sidebar, look for <strong>ShortcutPad Server</strong> (under the <strong>Tools</strong> section).
+          If the sidebar is not visible, use the toolbar sidebar button or choose <strong>View → Show Sidebar</strong>.
+        </li>
+        <li>Click <strong>ShortcutPad Server</strong>.</li>
+        <li>Toggle <strong>Run ShortcutPad Server</strong> to <strong>On</strong>.</li>
+        <li>Note the <strong>Mac IP</strong> and <strong>Port</strong> shown. This is the address the iPhone/iPad will use.</li>
+      </ol>
+
+      <blockquote>
+        The Mac app now has the server built in, so you do not need to run any Python scripts or install
+        separate helper programs.
+      </blockquote>
+
+      <h3>Install and set up the iOS companion</h3>
+      <ol>
+        <li>Install <strong>Colorist Tool Kit Pro</strong> on your iPhone or iPad from the App Store, TestFlight, or Xcode.</li>
+        <li>Open the app.</li>
+        <li>Go to <strong>ShortcutPad</strong>.</li>
+        <li>Tap the <strong>connection icon</strong> at the top of the screen.</li>
+        <li>The Mac should appear under <strong>Discovered Macs</strong>. Tap it.</li>
+        <li>
+          If the Mac does not appear, type the <strong>Mac IP</strong> and <strong>Port</strong> from the Mac app
+          into <strong>Manual Connection</strong>, then tap <strong>Connect</strong>.
+        </li>
+      </ol>
+
+      <h4>Important iOS permissions</h4>
+      <p>
+        When the app first tries to find the Mac, iOS will ask for <strong>Local Network</strong> access.
+        Choose <strong>Allow</strong>. If you missed it:
+      </p>
+      <p>
+        <strong>Settings</strong> → <strong>Privacy &amp; Security</strong> → <strong>Local Network</strong> →
+        <strong>Colorist Tool Kit Pro</strong> → <strong>On</strong>.
+      </p>
+
+      <h3>Using Monitor Calibration</h3>
+      <ol>
+        <li>On the iPhone/iPad, go to <strong>Monitor Calibration</strong>.</li>
+        <li>Tap <strong>Start</strong>. The screen will show the iPhone's IP address and port.</li>
+        <li>On the Mac, connect your client or tool to <code>iPhone-IP:8765</code>.</li>
+        <li>
+          If the iPhone and Mac are not on the same Wi-Fi, connect them with a USB cable and use
+          <code>iproxy 8765 8765</code> in Terminal to create the link.
+        </li>
+        <li>The iPhone will receive the color patch and show measurements.</li>
+      </ol>
+
+      <h3>Troubleshooting</h3>
+      <ul>
+        <li>
+          <strong>"iPhone/iPad only works when connected by USB"</strong>: The two devices are not on the
+          same Wi-Fi network. Connect both to the same Wi-Fi, or keep the USB cable attached. Make sure
+          <strong>Local Network</strong> permission is On in iOS.
+        </li>
+        <li>
+          <strong>"Mac not discovered"</strong>: Make sure the Mac's <strong>ShortcutPad Server</strong> is
+          running, and the iOS and Mac are on the same network. Some routers block Bonjour between 2.4 GHz and
+          5 GHz bands — use a manual IP if needed.
+        </li>
+        <li>
+          <strong>"Keys are not sent to Resolve/OBS"</strong>: Grant <strong>Accessibility</strong> permission
+          to the Mac app and make sure Resolve or OBS is running.
+        </li>
+        <li>
+          <strong>"Another Mac won't open the app"</strong>: For distribution to other Macs, the
+          <code>.app</code> must be notarized with a <strong>Developer ID Application</strong> certificate. A
+          personal Apple Development certificate only works on the Mac that built it.
+        </li>
+      </ul>
+    </section>
+
+    <section class="support-form" aria-labelledby="form-heading">
+      <h2 id="form-heading">Ask an Installation Question</h2>
+      <p>Stuck? Send us your question and we'll get back to you as soon as possible.</p>
+
+      <form name="installation-questions" method="POST" data-netlify="true">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="product-version">Product / Version</label>
+          <input type="text" id="product-version" name="product-version" placeholder="e.g. Colorist Tool Kit Pro 1.1.0" />
+        </div>
+
+        <div class="form-group">
+          <label for="macos-version">macOS Version</label>
+          <input type="text" id="macos-version" name="macos-version" placeholder="e.g. macOS 26.4" />
+        </div>
+
+        <div class="form-group">
+          <label for="question">Question or Issue</label>
+          <textarea id="question" name="question" rows="6" required></textarea>
+        </div>
+
+        <button type="submit" class="submit-button">Send Question</button>
+      </form>
+    </section>
+  </article>
+</Layout>
+
+<style>
+  .support-page {
+    max-width: 900px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  .support-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .support-header h1 {
+    font-size: 2.75rem;
+    margin: 0 0 0.5rem;
+    color: rgb(var(--accent-light));
+  }
+
+  .subtitle {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .download-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .download-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text);
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .download-card:hover {
+    background: var(--bg-elevated);
+    border-color: var(--gold);
+  }
+
+  .download-card.primary {
+    border-color: rgba(var(--accent), 0.5);
+    background: rgba(var(--accent), 0.08);
+  }
+
+  .download-card.primary:hover {
+    background: rgba(var(--accent), 0.14);
+  }
+
+  .download-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  .download-card h3 {
+    font-size: 1.1rem;
+    margin: 0 0 0.25rem;
+    color: var(--gold-light);
+  }
+
+  .download-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .instructions h2,
+  .support-form h2 {
+    font-size: 1.8rem;
+    color: rgb(var(--accent-light));
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .instructions h3 {
+    font-size: 1.35rem;
+    color: rgb(var(--accent-light));
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .instructions h4 {
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .instructions p,
+  .support-form p {
+    margin-bottom: 1.2rem;
+  }
+
+  .instructions ul,
+  .instructions ol {
+    margin-bottom: 1.5rem;
+    padding-left: 1.75rem;
+  }
+
+  .instructions li {
+    margin-bottom: 0.5rem;
+  }
+
+  .instructions blockquote {
+    border-left: 4px solid rgb(var(--accent));
+    padding: 0.75rem 1rem;
+    margin: 1.5rem 0;
+    background: var(--bg-surface);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  code {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 0.15rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  .support-form {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(var(--accent-light), 0.3);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1rem;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: 2px solid rgba(var(--accent), 0.5);
+    outline-offset: 2px;
+  }
+
+  .form-group textarea {
+    resize: vertical;
+  }
+
+  .submit-button {
+    padding: 1rem 2rem;
+    background: rgb(var(--accent));
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background 0.2s;
+  }
+
+  .submit-button:hover {
+    background: rgb(var(--accent-light));
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

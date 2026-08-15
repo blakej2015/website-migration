@@ -16,12 +16,16 @@ const { title, description = "Blake Jones - Colorist, Consultant, Instructor and
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <script defer src="/umami.js" data-website-id="c87b9c53-4e9d-4a07-bb0b-d67288823c37" data-host-url="/"></script>
   </head>
   <body>
     <header>
-      <div style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
-        <a href="/" style="font-size: 1.5rem; font-weight: bold; color: white; text-decoration: none;">Blake Jones</a>
-        <nav style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+      <div class="header-inner">
+        <a href="/" class="site-title">Blake Jones</a>
+        <nav>
           <a href="/">Home</a>
           <a href="/blake-s-biography">Bio</a>
           <a href="/colorist">Colorist</a>
@@ -32,6 +36,7 @@ const { title, description = "Blake Jones - Colorist, Consultant, Instructor and
           <a href="/youtube-channel">YouTube</a>
           <a href="/tips-and-tricks-videos">Tips</a>
           <a href="/webshop">Webshop</a>
+          <a href="/colorist-tool-kit-pro-support">Support</a>
           <a href="/links">Links</a>
         </nav>
       </div>
@@ -40,60 +45,184 @@ const { title, description = "Blake Jones - Colorist, Consultant, Instructor and
       <slot />
     </main>
     <footer>
-      <p>&copy; {new Date().getFullYear()} Blake Jones - All rights reserved</p>
+      <div class="footer-inner">
+        <p class="footer-name">Blake Jones</p>
+        <p class="footer-tagline">Colorist &middot; Consultant &middot; Instructor &middot; Writer</p>
+        <p class="footer-copy">&copy; {new Date().getFullYear()} Blake Jones. All rights reserved.</p>
+      </div>
     </footer>
   </body>
 </html>
 
 <style is:global>
   :root {
-    --accent: 136, 58, 234;
-    --accent-light: 224, 204, 250;
-    --accent-dark: 49, 10, 101;
-    --accent-gradient: linear-gradient(
-      45deg,
-      rgb(var(--accent)),
-      rgb(var(--accent-light)) 30%,
-      white 60%
-    );
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: rgba(201, 168, 76, 0.15);
+    --bg: #0a0a0b;
+    --bg-surface: #111113;
+    --bg-elevated: #18181c;
+    --text: #e8e6e1;
+    --text-muted: #8a8680;
+    --border: rgba(201, 168, 76, 0.15);
+    --accent: 201, 168, 76;
+    --accent-light: 232, 201, 122;
+    --accent-dark: 120, 90, 20;
   }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
   html {
-    font-family: system-ui, sans-serif;
-    background: #13151a;
-    background-size: 224px;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    scroll-behavior: smooth;
   }
+
   body {
     margin: 0;
     padding: 0;
-    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(201, 168, 76, 0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, rgba(201, 168, 76, 0.03) 0%, transparent 60%),
+      var(--bg);
   }
+
+  h1, h2, h3, h4 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
   header {
-    padding: 1rem;
-    background: rgba(var(--accent-dark), 0.5);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 10, 11, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
   }
+
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: 64px;
+  }
+
+  .site-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s;
+  }
+
+  .site-title:hover {
+    opacity: 0.8;
+  }
+
   nav {
     display: flex;
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+    align-items: center;
   }
+
   nav a {
-    color: white;
+    color: var(--text-muted);
     text-decoration: none;
+    font-size: 0.85rem;
     font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.65rem;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
   }
+
   nav a:hover {
-    color: rgb(var(--accent-light));
+    color: var(--gold);
+    background: var(--gold-dim);
   }
+
   main {
+    flex: 1;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    margin-top: auto;
+    background: var(--bg-surface);
+  }
+
+  .footer-inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
-  }
-  footer {
     text-align: center;
-    padding: 2rem;
-    background: rgba(var(--accent-dark), 0.3);
-    margin-top: 3rem;
+  }
+
+  .footer-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    margin: 0 0 0.4rem;
+    font-weight: 600;
+  }
+
+  .footer-tagline {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0 0 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0;
+    opacity: 0.6;
+  }
+
+  a {
+    color: var(--gold);
+  }
+
+  ::selection {
+    background: rgba(201, 168, 76, 0.25);
+    color: var(--gold-light);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(201, 168, 76, 0.3);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(201, 168, 76, 0.5);
   }
 </style>
