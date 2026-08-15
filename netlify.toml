@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  command = "true"  # Using pre-built dist committed in repo
   publish = "dist"
 
 [build.environment]
